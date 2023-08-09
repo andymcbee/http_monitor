@@ -18,7 +18,7 @@ import { pool } from "../../config/db.js";
         httpStatus         TEXT,
         httpStatusText     TEXT,
         success            BOOLEAN,
-        monitorId          TEXT REFERENCES monitors(id) NOT NULL,
+        monitorId          TEXT REFERENCES monitors(id) ON DELETE CASCADE NOT NULL,
         created_at         TIMESTAMPTZ DEFAULT NOW()
     );`
     );

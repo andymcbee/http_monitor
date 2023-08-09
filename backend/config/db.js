@@ -5,7 +5,6 @@ let envFileName;
 if (process.env.NODE_ENV === "production") {
   envFileName = ".docker.env";
 } else if (process.env.NODE_ENV === "development") {
-
   envFileName = ".env";
 }
 
