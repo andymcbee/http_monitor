@@ -7,15 +7,24 @@ export const createMonitorEvent = async (
   httpStatus,
   httpStatusText,
   responseTimeMs,
-  eventSuccess
+  eventSuccess,
+  accountId
 ) => {
   const id = uuidv4();
 
   try {
     const newMonitorEvent = await pool.query(
-      `INSERT INTO monitor_events(id, httpStatus, httpStatusText, monitorId, responseTimeMs, success) 
-        VALUES ($1, $2, $3, $4, $5, $6) RETURNING id;`,
-      [id, httpStatus, httpStatusText, monitorId, responseTimeMs, eventSuccess]
+      `INSERT INTO monitor_events(id, httpStatus, httpStatusText, monitorId, responseTimeMs, success, accountId) 
+        VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id;`,
+      [
+        id,
+        httpStatus,
+        httpStatusText,
+        monitorId,
+        responseTimeMs,
+        eventSuccess,
+        accountId,
+      ]
     );
 
     const data = newMonitorEvent.rows[0];

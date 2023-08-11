@@ -1,14 +1,14 @@
 import { pool } from "../../config/db.js";
 import { v4 as uuidv4 } from "uuid";
 
-export const createMonitor = async (name, domain_name) => {
+export const createMonitor = async (name, domain_name, accountId) => {
   const id = uuidv4();
 
   try {
     const newMonitor = await pool.query(
-      `INSERT INTO monitors(id, name, domain_name) 
-            VALUES ($1, $2, $3) RETURNING id, name, domain_name;`,
-      [id, name, domain_name]
+      `INSERT INTO monitors(id, name, domain_name, accountId) 
+            VALUES ($1, $2, $3, $4) RETURNING id, name, domain_name;`,
+      [id, name, domain_name, accountId]
     );
 
     const data = newMonitor.rows[0];

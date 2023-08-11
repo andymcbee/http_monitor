@@ -7,10 +7,10 @@ import { createMonitorEvent } from "../services/db/createMonitorEvent.js";
 import { logger } from "../logger/index.js";
 
 export const createMonitor = async (req, res) => {
-  const { name, domain_name } = req.body;
+  const { name, domain_name, accountId } = req.body;
 
   try {
-    const newMonitor = await createMonitorInDb(name, domain_name);
+    const newMonitor = await createMonitorInDb(name, domain_name, accountId);
 
     const monitorId = newMonitor.data.id;
 
@@ -25,7 +25,8 @@ export const createMonitor = async (req, res) => {
       status,
       statusText,
       responseTimeMs,
-      eventSuccess
+      eventSuccess,
+      accountId
     );
 
     const monitorEventId = newMonitorEvent.data.id;
@@ -50,9 +51,10 @@ export const createMonitor = async (req, res) => {
 
 export const deleteMonitor = async (req, res) => {
   const { monitorId } = req.params;
+  const { accountId } = req.body;
 
   try {
-    const data = await deleteMonitorInDb(monitorId);
+    const data = await deleteMonitorInDb(monitorId, accountId);
 
     console.log(data);
 
@@ -74,17 +76,25 @@ export const deleteMonitor = async (req, res) => {
 };
 
 export const updateMonitor = async (req, res) => {
-  const data = req.body;
   const { monitorId } = req.params;
+  const { domain_name, name, accountId } = req.body;
 
   try {
-    const updateMonitor = await updateMonitorInDb(monitorId, data);
+    console.log("1");
+    const updateMonitor = await updateMonitorInDb(
+      monitorId,
+      domain_name,
+      name,
+      accountId
+    );
 
+    console.log("2");
     res.status(200).json({
       success: true,
       message: `Monitor ${updateMonitor.data.monitorId} updated!`,
     });
   } catch (error) {
+    logger.error(error);
     res
       .status(400)
       .json({ success: false, message: "Error updating monitor." });
