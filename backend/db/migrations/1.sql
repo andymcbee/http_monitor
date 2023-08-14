@@ -18,6 +18,7 @@
         id             TEXT PRIMARY KEY    NOT NULL,
         name           VARCHAR(255),
         email          VARCHAR(255) UNIQUE NOT NULL,
+        password       VARCHAR(255) NOT NULL,
         accountId      TEXT REFERENCES accounts(id) ON DELETE CASCADE NOT NULL,
         created_at     TIMESTAMPTZ DEFAULT NOW()
     );

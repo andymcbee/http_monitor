@@ -10,6 +10,7 @@ export const createMonitor = async (req, res) => {
   const { name, domain_name, accountId } = req.body;
 
   try {
+    console.log("Create Monitor....");
     const newMonitor = await createMonitorInDb(name, domain_name, accountId);
 
     const monitorId = newMonitor.data.id;
