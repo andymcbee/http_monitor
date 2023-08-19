@@ -1,0 +1,16 @@
+.topMenuParent {
+  display: flex;
+  justify-content: space-around;
+  padding: 20px;
+  align-items: center;
+}
+
+.topMenuRightSection {
+  display: flex;
+  gap: 20px;
+}
+
+.mainMenuItem:hover {
+  cursor: pointer;
+  color: rgb(151, 139, 139);
+}

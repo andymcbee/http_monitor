@@ -1,8 +1,61 @@
 import { fetchUserPasswordHash } from "../services/db/fetchUserPasswordHash.js";
+import { fetchUserDetails } from "../services/db/fetchUserDetails.js";
+import { fetchUserByEmail } from "../services/db/fetchUserByEmail.js";
+
 import { logger } from "../logger/index.js";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+
+export const getUser = async (req, res) => {
+  try {
+    console.log("Back end JWT:::");
+    console.log(req.headers.authorization);
+    //get uid from jwt
+    //pass into fetchUsers
+    //return to front end email, uid, accid
+    if (req.headers.authorization === undefined) {
+      req.headers.authorization = "";
+    }
+
+    const token = req.headers.authorization.split(" ")[1];
+
+    let decodedToken;
+
+    if (token) {
+      decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+    }
+
+    console.log(decodedToken);
+    const user = await fetchUserDetails(decodedToken.key);
+
+    if (user.success) {
+      res.status(200).json({
+        success: true,
+        message: `User found!`,
+        data: {
+          userId: user.userId,
+          accountId: user.accountId,
+          userEmail: user.userEmail,
+        },
+      });
+    } else {
+      res.status(401).json({
+        success: false,
+        message: `User was not found.`,
+        data: {
+          user,
+        },
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ success: false, message: "Denied access." });
+  }
+};
 
 export const login = async (req, res) => {
+  console.log("LOGIN ENDPOINT HIT. (CONTROLLER)");
+  console.log(req.body);
   const { user_email, user_password } = req.body;
 
   try {
@@ -20,9 +73,18 @@ export const login = async (req, res) => {
 
     //check if hash and provided password match
     let match;
+    let jwtToken;
 
     if (userPasswordHash.success) {
       match = await bcrypt.compare(user_password, userPasswordHash.password);
+
+      jwtToken = await jwt.sign(
+        { key: userPasswordHash.userId },
+        process.env.JWT_SECRET,
+        {
+          expiresIn: 86400,
+        }
+      );
     } else {
       match = false;
     }
@@ -31,7 +93,12 @@ export const login = async (req, res) => {
       res.status(200).json({
         success: true,
         message: `Password and email match!`,
-        token: "Add a JWT token here.",
+        data: {
+          jwtToken,
+          userEmail: userPasswordHash.userEmail,
+          userId: userPasswordHash.userId,
+          accountId: userPasswordHash.accountId,
+        },
       });
     } else {
       res.status(401).json({

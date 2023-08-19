@@ -8,7 +8,7 @@ export const verifyJwt = async (req, res, next) => {
     }
 
     //JWT: Authorization: Bearer (token)
-    console.log("JWT FUNCTION...");
+    console.log("JWT MIDDLEWARE FUNCTION...");
     console.log(req.headers);
 
     const token = req.headers.authorization.split(" ")[1];
