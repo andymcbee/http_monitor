@@ -1,0 +1,29 @@
+.login {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 50px;
+  padding-top: 30px;
+  align-self: start;
+  border: rgb(216, 216, 216);
+  border-width: 1px;
+  border-radius: 25px;
+  border-style: solid;
+}
+
+.loginTitle {
+  font-size: 40px;
+}
+
+.loginForm {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.loginErrorMessage {
+  text-align: center;
+  font-size: 16px;
+  margin: 5px;
+  color: red;
+}

@@ -6,6 +6,7 @@ import userRoute from "./routes/userRoutes.js";
 import bodyParser from "body-parser";
 import { logger } from "./logger/index.js";
 import { verifyJwt } from "./services/middleware/verifyJwt.js";
+import cors from "cors";
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -15,6 +16,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 // parse application/json
 app.use(bodyParser.json());
+
+app.use(cors());
 
 //Middleware
 //app.use(verifyJwt);

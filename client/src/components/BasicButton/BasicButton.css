@@ -1,0 +1,10 @@
+.basicButton {
+  margin-top: 20px;
+  cursor: pointer;
+  background-color: rgb(21, 102, 207);
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
+  text-align: center;
+}
