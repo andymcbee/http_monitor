@@ -1,17 +1,19 @@
 import axios from "axios";
 
-export const fetchUserDetails = async (jwt) => {
+export const fetchUserDetails = async () => {
   console.log("Getch user details");
 
   try {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      withCredentials: true,
+    };
     const userDetails = await axios.post(
       `http://localhost:3000/api/v1/user/me`,
       {},
-      {
-        headers: {
-          authorization: `Bearer ${jwt}`,
-        },
-      }
+      config
     );
 
     console.log("USer data from API call::");

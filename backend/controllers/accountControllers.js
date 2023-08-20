@@ -42,8 +42,16 @@ export const createAccount = async (req, res) => {
 
     const userId = newUser.data.id;
 
+    const jwtExpiry = 86400;
+
     const jwtToken = await jwt.sign({ key: userId }, process.env.JWT_SECRET, {
-      expiresIn: 86400,
+      expiresIn: jwtExpiry,
+    });
+
+    res.cookie("jwt", jwtToken, {
+      httpOnly: true,
+      sameSite: "lax",
+      maxAge: jwtExpiry * 1000, //maxAge is in MS, jwt initially stored in seconds
     });
 
     res.status(200).json({
@@ -51,7 +59,6 @@ export const createAccount = async (req, res) => {
       message: `New account created for user ${user_email}`,
       data: {
         accountId,
-        jwtToken,
         userId,
         userEmail: user_email,
       },

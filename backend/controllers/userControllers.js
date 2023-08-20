@@ -1,6 +1,5 @@
 import { fetchUserPasswordHash } from "../services/db/fetchUserPasswordHash.js";
 import { fetchUserDetails } from "../services/db/fetchUserDetails.js";
-import { fetchUserByEmail } from "../services/db/fetchUserByEmail.js";
 
 import { logger } from "../logger/index.js";
 import bcrypt from "bcrypt";
@@ -13,17 +12,10 @@ export const getUser = async (req, res) => {
     //get uid from jwt
     //pass into fetchUsers
     //return to front end email, uid, accid
-    if (req.headers.authorization === undefined) {
-      req.headers.authorization = "";
-    }
 
-    const token = req.headers.authorization.split(" ")[1];
+    const { jwt: jwtToken } = req.cookies;
 
-    let decodedToken;
-
-    if (token) {
-      decodedToken = jwt.verify(token, process.env.JWT_SECRET);
-    }
+    const decodedToken = jwt.verify(jwtToken, process.env.JWT_SECRET);
 
     console.log(decodedToken);
     const user = await fetchUserDetails(decodedToken.key);
@@ -74,6 +66,7 @@ export const login = async (req, res) => {
     //check if hash and provided password match
     let match;
     let jwtToken;
+    let jwtExpiry = 86400;
 
     if (userPasswordHash.success) {
       match = await bcrypt.compare(user_password, userPasswordHash.password);
@@ -82,7 +75,7 @@ export const login = async (req, res) => {
         { key: userPasswordHash.userId },
         process.env.JWT_SECRET,
         {
-          expiresIn: 86400,
+          expiresIn: jwtExpiry,
         }
       );
     } else {
@@ -90,11 +83,15 @@ export const login = async (req, res) => {
     }
 
     if (match && userPasswordHash.success) {
+      res.cookie("jwt", jwtToken, {
+        httpOnly: true,
+        sameSite: "lax",
+        maxAge: jwtExpiry * 1000, //maxAge is in MS, jwt initially stored in seconds
+      });
       res.status(200).json({
         success: true,
         message: `Password and email match!`,
         data: {
-          jwtToken,
           userEmail: userPasswordHash.userEmail,
           userId: userPasswordHash.userId,
           accountId: userPasswordHash.accountId,
@@ -109,5 +106,18 @@ export const login = async (req, res) => {
   } catch (error) {
     logger.error(error);
     res.status(400).json({ success: false, message: "Error logging in user." });
+  }
+};
+
+export const logout = async (req, res) => {
+  try {
+    res.clearCookie("jwt");
+    res.status(200).json({
+      success: true,
+      message: `User logged out!`,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ success: false, message: "An error has occurred." });
   }
 };

@@ -7,9 +7,12 @@ import bodyParser from "body-parser";
 import { logger } from "./logger/index.js";
 import { verifyJwt } from "./services/middleware/verifyJwt.js";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 
 const app = express();
 const port = process.env.PORT || 3000;
+
+app.use(cookieParser());
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -17,7 +20,12 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // parse application/json
 app.use(bodyParser.json());
 
-app.use(cors());
+let corsOptions = {
+  origin: ["http://localhost:5173"],
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
 
 //Middleware
 //app.use(verifyJwt);

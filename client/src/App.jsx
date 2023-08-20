@@ -11,6 +11,7 @@ import TopMenu from "./components/TopMenu/TopMenu";
 import LoadingModal from "./components/LoadingModal/LoadingModal";
 import { createNewAccount } from "./service/createNewAccount";
 import SidebarMenu from "./components/SidebarMenu/SidebarMenu";
+import { userLogout } from "./service/userLogout";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -31,13 +32,9 @@ function App() {
 
     if (user) setGlobalLoading(false);
     if (!user) {
-      jwt = localStorage.getItem("jwt");
-    }
-    if (jwt) {
-      //get user info with jwt
       (async function () {
         console.log("Before user details...");
-        const userDetails = await fetchUserDetails(jwt);
+        const userDetails = await fetchUserDetails();
         await setGlobalLoadingAsync(false);
         console.log("After user details...");
 
@@ -76,10 +73,6 @@ function App() {
       console.log(newAccount);
 
       if (newAccount.success) {
-        console.log("IF STATEMENT...");
-        //Store JWT in Lstore
-        localStorage.setItem("jwt", newAccount.jwtToken);
-
         setUser({
           userEmail: newAccount.userEmail,
           userId: newAccount.userId,
@@ -107,8 +100,6 @@ function App() {
       console.log(userAuth);
       if (userAuth.success) {
         console.log("IF STATEMENT...");
-        //Store JWT in Lstore
-        localStorage.setItem("jwt", userAuth.jwtToken);
 
         setUser({
           userEmail: userAuth.userEmail,
@@ -130,10 +121,7 @@ function App() {
   };
 
   const handleUserLogout = async () => {
-    console.log("Handle user logout...");
-    //remove JWT
-    //set user to null
-    localStorage.removeItem("jwt");
+    await userLogout();
     setUser(null);
     navigate("/login");
   };

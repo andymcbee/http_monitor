@@ -3,24 +3,22 @@ import { logger } from "../../logger/index.js";
 
 export const verifyJwt = async (req, res, next) => {
   try {
-    if (req.headers.authorization === undefined) {
-      req.headers.authorization = "";
+    console.log("JWT MIDDLEWEAR...");
+    console.log(req.cookies);
+
+    const { jwt: jwtToken } = req.cookies;
+    if (!jwtToken) {
+      throw "No jwt found.";
     }
-
-    //JWT: Authorization: Bearer (token)
-    console.log("JWT MIDDLEWARE FUNCTION...");
-    console.log(req.headers);
-
-    const token = req.headers.authorization.split(" ")[1];
-
-    console.log(token);
+    console.log(jwtToken);
 
     let decodedToken;
 
-    if (token) {
-      decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+    if (jwtToken) {
+      decodedToken = jwt.verify(jwtToken, process.env.JWT_SECRET);
     }
 
+    console.log("JWT MIDDLEWARE PASSED!");
     next();
   } catch (error) {
     logger.error(error);
