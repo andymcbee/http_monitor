@@ -1,3 +1,8 @@
+.screen {
+  display: flex;
+  flex-direction: row;
+}
+
 .main {
   display: flex;
   flex-direction: column;
@@ -5,14 +10,11 @@
   width: 100vw;
 }
 
-.topBar {
-}
-
 .pageContent {
   display: flex;
   flex-direction: row;
-  height: 100%;
   flex: 1;
+  background-color: rgba(194, 194, 194, 0.295);
 }
 
 .sidebar {
@@ -22,4 +24,6 @@
 .page {
   width: 100%;
   margin: 20px;
+  background-color: rgb(255, 255, 255);
+  padding: 35px;
 }

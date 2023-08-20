@@ -1,0 +1,29 @@
+.sidebarMenu {
+  display: flex;
+  height: 100%;
+  padding: 50px 20px 0px 0px;
+  border-right: solid rgb(233, 231, 231) 1px;
+}
+
+.sidebarMenu > Ul {
+  margin: 0;
+  padding: 50px 0 0 20px;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  font-size: 20px;
+  color: var(--menuItemColor);
+}
+
+.sidebarMenu > Ul > Li {
+  cursor: pointer;
+  max-width: fit-content;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
+}
+
+.sidebarMenu > Ul > Li:hover {
+  color: var(--menuItemColorActive);
+}

@@ -3,6 +3,7 @@
   justify-content: space-around;
   padding: 20px;
   align-items: center;
+  border-bottom: solid rgb(233, 231, 231) 1px;
 }
 
 .topMenuRightSection {

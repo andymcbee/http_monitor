@@ -10,6 +10,7 @@ import { fetchUserDetails } from "./service/fetchUserDetails";
 import TopMenu from "./components/TopMenu/TopMenu";
 import LoadingModal from "./components/LoadingModal/LoadingModal";
 import { createNewAccount } from "./service/createNewAccount";
+import SidebarMenu from "./components/SidebarMenu/SidebarMenu";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -143,50 +144,56 @@ function App() {
 
   return (
     <>
-      <div className="main">
-        <div className="topBar">
-          <TopMenu user={user} handleUserLogout={handleUserLogout} />
-        </div>
-        <div className="pageContent">
-          {user && !globalLoading && <div className="sidebar">LeftSidebar</div>}
-          <div className="page">
-            <Routes>
-              <Route
-                path="/"
-                element={
-                  user && !globalLoading ? (
-                    <HomePage />
-                  ) : (
+      <div className="screen">
+        {user && !globalLoading && (
+          <div className="sidebar">
+            <SidebarMenu />
+          </div>
+        )}
+        <div className="main">
+          <div className="topBar">
+            <TopMenu user={user} handleUserLogout={handleUserLogout} />
+          </div>
+          <div className="pageContent">
+            <div className="page">
+              <Routes>
+                <Route
+                  path="/"
+                  element={
+                    user && !globalLoading ? (
+                      <HomePage />
+                    ) : (
+                      <LoginPage
+                        handleUserLogin={handleUserLogin}
+                        credentialsValid={userAuthErrorMessage}
+                      />
+                    )
+                  }
+                />
+                <Route
+                  path="/login"
+                  element={
                     <LoginPage
                       handleUserLogin={handleUserLogin}
                       credentialsValid={userAuthErrorMessage}
                     />
-                  )
-                }
-              />
-              <Route
-                path="/login"
-                element={
-                  <LoginPage
-                    handleUserLogin={handleUserLogin}
-                    credentialsValid={userAuthErrorMessage}
-                  />
-                }
-              />
-              <Route
-                path="/signup"
-                element={
-                  !user !== null ? (
-                    <SignupPage
-                      handleCreateAccount={handleCreateAccount}
-                      serverResponse={userSignupErrorMessage}
-                    />
-                  ) : (
-                    <HomePage />
-                  )
-                }
-              />
-            </Routes>
+                  }
+                />
+                <Route
+                  path="/signup"
+                  element={
+                    !user !== null ? (
+                      <SignupPage
+                        handleCreateAccount={handleCreateAccount}
+                        serverResponse={userSignupErrorMessage}
+                      />
+                    ) : (
+                      <HomePage />
+                    )
+                  }
+                />
+              </Routes>
+            </div>
           </div>
         </div>
       </div>

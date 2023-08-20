@@ -3,9 +3,12 @@
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  /*Menu Colors*/
+  --menuItemColor: rgb(0, 0, 0);
+  --menuItemColorActive: rgb(151, 139, 139);
+
+  /*Page Defaults*/
+  --pageTitle: 30px;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -30,6 +33,10 @@ body {
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
+}
+
+.pageTitle {
+  font-size: var(--pageTitle);
 }
 
 @media (prefers-color-scheme: light) {
