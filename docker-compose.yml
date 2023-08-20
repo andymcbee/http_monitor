@@ -3,8 +3,9 @@ version: "3.9"
 services:
   server:
     env_file:
-      - .docker.env
-    build: .
+      - ./backend/.docker.env
+    build:
+      context: ./backend
     ports:
       - "3000:3000"
   db:
@@ -17,6 +18,12 @@ services:
     volumes:
       - data:/var/lib/postgresql/data
     command: -p 5433
+  react:
+    build:
+      context: ./client
+    ports:
+      - "5173:5173"
+    stdin_open: true
 
 volumes:
   data:

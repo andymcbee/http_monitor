@@ -37,4 +37,5 @@ app.use("/api/v1/user", userRoute);
 app.listen(port, () => {
   logger.info(`Server running on port: ${port}`);
   logger.info(`NODE_ENV: ${process.env.NODE_ENV}`);
+  console.log("TEST: Did this show in new docker build?");
 });
