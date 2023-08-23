@@ -51,6 +51,7 @@ export default function LoginPage({ handleUserLogin, credentialsValid }) {
           placeholderText="Enter your password"
           inputType="password"
         />
+
         <BasicButton handleClick={handleFormSubmit} buttonText="Login" />
 
         {invalidCredentials && (

@@ -11,6 +11,8 @@ export const getHttpStatus = async (domain_name) => {
       signal: AbortSignal.timeout(timeout),
     });
   } catch (error) {
+    console.log(error);
+
     const responseTimeMs = Date.now() - startTime;
 
     if (error.type === "aborted") {
@@ -18,7 +20,7 @@ export const getHttpStatus = async (domain_name) => {
       //This isn't a true error and program should still run
       return {
         status: null,
-        statusText: ` System-set timeout of ${timeout} ms triggered: ${error.message} ${error.type}`,
+        statusText: `System-set timeout of ${timeout} ms triggered: ${error.message} ${error.type}`,
         responseTimeMs,
       };
     } else if (error.errno === "ENOTFOUND") {
@@ -30,7 +32,7 @@ export const getHttpStatus = async (domain_name) => {
         responseTimeMs,
       };
     } else {
-      throw new Error(`Issue fetching ${domain_name} Message: ${error}`);
+      throw `${error}`;
     }
   }
 

@@ -1,6 +1,8 @@
 import "dotenv/config";
 import express from "express";
 import monitorRoute from "./routes/monitorRoutes.js";
+import monitorEventRoute from "./routes/monitorEventRoutes.js";
+
 import accountRoute from "./routes/accountRoutes.js";
 import userRoute from "./routes/userRoutes.js";
 import bodyParser from "body-parser";
@@ -33,9 +35,9 @@ app.use(cors(corsOptions));
 app.use("/api/v1/monitor", verifyJwt, monitorRoute);
 app.use("/api/v1/account", accountRoute);
 app.use("/api/v1/user", userRoute);
+app.use("/api/v1/monitor-event", monitorEventRoute);
 
 app.listen(port, () => {
   logger.info(`Server running on port: ${port}`);
   logger.info(`NODE_ENV: ${process.env.NODE_ENV}`);
-  console.log("TEST: Did this show in new docker build?");
 });

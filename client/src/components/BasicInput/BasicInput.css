@@ -21,3 +21,8 @@
 .basicInputError {
   border-color: red;
 }
+
+.basicInputContainer {
+  display: flex;
+  flex-direction: column;
+}

@@ -11,6 +11,11 @@ export const createMonitor = async (req, res) => {
 
   try {
     console.log("Create Monitor....");
+
+    // this simply creates a new URL from the provided URL
+    // it throws an error by default if it isn't valid
+    new URL(domain_name);
+
     const newMonitor = await createMonitorInDb(name, domain_name, accountId);
 
     const monitorId = newMonitor.data.id;
@@ -44,9 +49,7 @@ export const createMonitor = async (req, res) => {
     });
   } catch (error) {
     logger.error(error);
-    res
-      .status(400)
-      .json({ success: false, message: "Error creating monitor." });
+    res.status(400).json({ success: false, message: error.message });
   }
 };
 
@@ -104,15 +107,15 @@ export const updateMonitor = async (req, res) => {
 
 export const fetchAllMonitors = async (req, res) => {
   try {
-    const fetchAllMonitors = await fetchMonitors();
+    const { accountId } = req.params;
+    console.log(accountId);
+    const fetchAllMonitors = await fetchMonitors(accountId);
 
     res.status(200).json({
       success: true,
       monitors: fetchAllMonitors.monitors,
     });
   } catch (error) {
-    res
-      .status(400)
-      .json({ success: false, message: "Error updating monitor." });
+    res.status(400).json({ success: false, message: error.message });
   }
 };

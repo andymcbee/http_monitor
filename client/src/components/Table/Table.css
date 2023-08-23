@@ -1,5 +1,10 @@
 .users-table {
   table-layout: fixed;
-  width: 100%;
   border-collapse: collapse;
+}
+
+td {
+  width: 0.1%;
+  white-space: nowrap;
+  vertical-align: top;
 }

@@ -10,7 +10,7 @@ export default function InputText({
   inputType,
 }) {
   return (
-    <>
+    <div className="basicInputContainer">
       <label className="basicInputLabel">{labelText}</label>
       <input
         className={`basicInput ${error ? "basicInputError" : ""}`}
@@ -19,6 +19,6 @@ export default function InputText({
         onChange={(e) => handleInput(e.target.value)}
         value={inputText}
       />
-    </>
+    </div>
   );
 }

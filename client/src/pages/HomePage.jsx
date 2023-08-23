@@ -1,55 +1,54 @@
 import "./HomePage.css";
 import Table from "../components/Table/Table";
+import React, { useEffect, useState } from "react";
+import { fetchMonitors } from "../service/fetchMonitors";
+import BasicButton from "../components/BasicButton/BasicButton";
+import { useNavigate } from "react-router-dom";
 
-export default function HomePage() {
-  const monitors = [
-    {
-      website: "Google",
-      url: "https://google.com/",
-      statusCode: "200",
-      responseTime: "210ms",
-      statusText: "OK",
-      id: "1",
-    },
-    {
-      website: "Google",
-      url: "https://google.com/",
-      statusCode: "200",
-      responseTime: "220ms",
-      statusText: "OK",
-      id: "2",
-    },
-    {
-      website: "Google",
-      url: "https://google.com/",
-      statusCode: "200",
-      responseTime: "230ms",
-      statusText: "OK",
-      id: "3",
-    },
-    {
-      website: "Google",
-      url: "https://google.com/",
-      statusCode: "200",
-      responseTime: "250ms",
-      statusText: "OK",
-      id: "4",
-    },
-  ];
+export default function HomePage({ user }) {
+  const navigate = useNavigate();
 
-  /* const headers = [
-    { title: "Website", dataMap: "website" },
-    { title: "Uptime", dataMap: "website" },
-    { title: "Status Code", dataMap: "website" },
-    { title: "Status", dataMap: "website" },
-    { title: "Uptime", dataMap: "website" },
-  ]; */
+  const { accountId } = user;
+
+  const [monitors, setMonitors] = useState([]);
+
+  useEffect(() => {
+    (async function () {
+      const myMonitors = await fetchMonitors(accountId);
+
+      console.log(myMonitors);
+
+      const myMap = myMonitors.map((item) => {
+        return (item = {
+          ...item,
+          tableActionButton: (
+            <BasicButton
+              buttonText="View History"
+              handleClick={() => handleViewHistoryClick(item.id)}
+            />
+          ),
+        });
+      });
+
+      console.log(myMap);
+
+      setMonitors(myMap);
+
+      console.log(myMap);
+    })();
+  }, []);
+
+  const handleViewHistoryClick = (monitorId) => {
+    console.log(monitorId);
+    navigate(`/monitor-history/${monitorId}`);
+  };
 
   const headers = [
-    { columnTitle: "Website", columnDataMap: "url" },
-    { columnTitle: "Status Code", columnDataMap: "statusCode" },
-    { columnTitle: "Status", columnDataMap: "statusText" },
-    { columnTitle: "response Time", columnDataMap: "responseTime" },
+    { columnTitle: "Website", columnDataMap: "domain_name" },
+    { columnTitle: "Status Code", columnDataMap: "httpstatus" },
+    { columnTitle: "Status", columnDataMap: "httpstatustext" },
+    { columnTitle: "Response Time", columnDataMap: "responsetimems" },
+    { columnTitle: "Action", columnDataMap: "tableActionButton" },
   ];
 
   return (

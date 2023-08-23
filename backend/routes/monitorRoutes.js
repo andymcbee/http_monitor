@@ -9,7 +9,7 @@ import {
 const router = Router();
 
 router.post("/", createMonitor);
-router.get("/", fetchAllMonitors);
+router.get("/all/:accountId", fetchAllMonitors);
 router.delete("/:monitorId", deleteMonitor);
 router.patch("/:monitorId", updateMonitor);
 

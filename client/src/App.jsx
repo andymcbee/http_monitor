@@ -12,6 +12,8 @@ import LoadingModal from "./components/LoadingModal/LoadingModal";
 import { createNewAccount } from "./service/createNewAccount";
 import SidebarMenu from "./components/SidebarMenu/SidebarMenu";
 import { userLogout } from "./service/userLogout";
+import AddMonitor from "./pages/AddMonitor";
+import MonitorEventHistory from "./pages/MonitorEventHistory";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -27,8 +29,6 @@ function App() {
 
   useEffect(() => {
     //Optimize this later. It'll call LocalStorage every time, even if we know a user is present.
-
-    let jwt;
 
     if (user) setGlobalLoading(false);
     if (!user) {
@@ -54,23 +54,12 @@ function App() {
   }, []);
 
   const handleCreateAccount = async (email, password, confirmPassword) => {
-    console.log("HANDLE CREATE ACCOUNT TRIGGERED IN /APP/...");
-    //Hit Create Account endpoint
-    //Return response...
-    //make sure error msg is returned if needed (Eg. if PWs dont match or email is taken already)
-    //pass res via prop back to Signup to ensure it shows erros as needed.
-    console.log(email);
-    console.log(password);
-    console.log(confirmPassword);
-
     try {
       const newAccount = await createNewAccount(
         email,
         password,
         confirmPassword
       );
-      console.log("In app::");
-      console.log(newAccount);
 
       if (newAccount.success) {
         setUser({
@@ -80,10 +69,8 @@ function App() {
         });
 
         navigate("/");
-        console.log("After..");
       } else {
         setUserSignupErrorMessage(newAccount.message);
-        console.log("Signup failed.");
       }
     } catch (error) {
       console.log(error);
@@ -93,14 +80,8 @@ function App() {
   const handleUserLogin = async (email, password) => {
     try {
       //NOTE: Dummy credentials hard coded in the service for testing. Be sure to pass from component through to backend (from form)
-      console.log("Handle submit triggered!");
-      console.log("This should fire before userLoginService...");
       const userAuth = await userLoginService(email, password);
-      console.log("This should fire after......");
-      console.log(userAuth);
       if (userAuth.success) {
-        console.log("IF STATEMENT...");
-
         setUser({
           userEmail: userAuth.userEmail,
           userId: userAuth.userId,
@@ -149,7 +130,7 @@ function App() {
                   path="/"
                   element={
                     user && !globalLoading ? (
-                      <HomePage />
+                      <HomePage user={user} />
                     ) : (
                       <LoginPage
                         handleUserLogin={handleUserLogin}
@@ -161,22 +142,52 @@ function App() {
                 <Route
                   path="/login"
                   element={
-                    <LoginPage
-                      handleUserLogin={handleUserLogin}
-                      credentialsValid={userAuthErrorMessage}
-                    />
+                    !user ? (
+                      <LoginPage
+                        handleUserLogin={handleUserLogin}
+                        credentialsValid={userAuthErrorMessage}
+                      />
+                    ) : (
+                      <HomePage user={user} />
+                    )
                   }
                 />
                 <Route
                   path="/signup"
                   element={
-                    !user !== null ? (
+                    !user ? (
                       <SignupPage
                         handleCreateAccount={handleCreateAccount}
                         serverResponse={userSignupErrorMessage}
                       />
                     ) : (
-                      <HomePage />
+                      <HomePage user={user} />
+                    )
+                  }
+                />
+                <Route
+                  path="/add-monitor"
+                  element={
+                    user ? (
+                      <AddMonitor user={user} />
+                    ) : (
+                      <LoginPage
+                        handleUserLogin={handleUserLogin}
+                        credentialsValid={userAuthErrorMessage}
+                      />
+                    )
+                  }
+                />
+                <Route
+                  path="/monitor-history/:monitorId"
+                  element={
+                    user ? (
+                      <MonitorEventHistory user={user} />
+                    ) : (
+                      <LoginPage
+                        handleUserLogin={handleUserLogin}
+                        credentialsValid={userAuthErrorMessage}
+                      />
                     )
                   }
                 />
